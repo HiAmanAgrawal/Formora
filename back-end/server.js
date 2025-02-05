@@ -1,8 +1,9 @@
 import express from "express";
 import cors from "cors";
+import routes from "./routes/route"
 
 const app = express();
-
+app.use('/api', routes)
 app.use(
   cors(),
 );
