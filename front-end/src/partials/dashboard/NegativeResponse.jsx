@@ -4,7 +4,6 @@ import LineChart from '../../charts/LineChart01';
 import { chartAreaGradient } from '../../charts/ChartjsConfig';
 import EditMenu from '../../components/DropdownEditMenu';
 
-// Import utilities
 import { adjustColorOpacity, getCssVariable } from '../../utils/Utils';
 
 function DashboardCard02() {
@@ -35,16 +34,16 @@ function DashboardCard02() {
           const chart = context.chart;
           const {ctx, chartArea} = chart;
           return chartAreaGradient(ctx, chartArea, [
-            { stop: 0, color: adjustColorOpacity(getCssVariable('--color-violet-500'), 0) },
-            { stop: 1, color: adjustColorOpacity(getCssVariable('--color-violet-500'), 0.2) }
+            { stop: 0, color: adjustColorOpacity(getCssVariable('--color-red-500'), 0) },
+            { stop: 1, color: adjustColorOpacity(getCssVariable('--color-red-500'), 0.2) }
           ]);
         },       
-        borderColor: getCssVariable('--color-violet-500'),
+        borderColor: getCssVariable('--color-red-500'),
         borderWidth: 2,
         pointRadius: 0,
         pointHoverRadius: 3,
-        pointBackgroundColor: getCssVariable('--color-violet-500'),
-        pointHoverBackgroundColor: getCssVariable('--color-violet-500'),
+        pointBackgroundColor: getCssVariable('--color-red-500'),
+        pointHoverBackgroundColor: getCssVariable('--color-red-500'),
         pointBorderWidth: 0,
         pointHoverBorderWidth: 0,          
         clip: 20,
@@ -72,33 +71,62 @@ function DashboardCard02() {
     ],
   };
 
+  {/*
+    const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [],
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://backend-api.com/negative-response-chart'); // Update with actual API URL
+        const data = await response.json();
+        
+        if (data.labels && data.datasets) {
+          setChartData({
+            labels: data.labels,
+            datasets: data.datasets.map((dataset, index) => ({
+              ...dataset,
+              backgroundColor: function (context) {
+                const chart = context.chart;
+                const { ctx, chartArea } = chart;
+                return chartAreaGradient(ctx, chartArea, [
+                  { stop: 0, color: adjustColorOpacity(getCssVariable(index === 0 ? '--color-red-500' : '--color-gray-500'), 0) },
+                  { stop: 1, color: adjustColorOpacity(getCssVariable(index === 0 ? '--color-red-500' : '--color-gray-500'), 0.2) }
+                ]);
+              },
+              borderColor: index === 0 ? getCssVariable('--color-red-500') : adjustColorOpacity(getCssVariable('--color-gray-500'), 0.25),
+              pointBackgroundColor: index === 0 ? getCssVariable('--color-red-500') : adjustColorOpacity(getCssVariable('--color-gray-500'), 0.25),
+              pointHoverBackgroundColor: index === 0 ? getCssVariable('--color-red-500') : adjustColorOpacity(getCssVariable('--color-gray-500'), 0.25),
+              borderWidth: 2,
+              pointRadius: 0,
+              pointHoverRadius: 3,
+              pointBorderWidth: 0,
+              pointHoverBorderWidth: 0,
+              clip: 20,
+              tension: 0.2,
+            })),
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching chart data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  */}
+
   return (
     <div className="flex flex-col col-span-full sm:col-span-6 xl:col-span-4 bg-white dark:bg-gray-800 shadow-xs rounded-xl">
       <div className="px-5 pt-5">
         <header className="flex justify-between items-start mb-2">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">Acme Advanced</h2>
-          {/* Menu button */}
-          <EditMenu align="right" className="relative inline-flex">
-            <li>
-              <Link className="font-medium text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-200 flex py-1 px-3" to="#0">
-                Option 1
-              </Link>
-            </li>
-            <li>
-              <Link className="font-medium text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-200 flex py-1 px-3" to="#0">
-                Option 2
-              </Link>
-            </li>
-            <li>
-              <Link className="font-medium text-sm text-red-500 hover:text-red-600 flex py-1 px-3" to="#0">
-                Remove
-              </Link>
-            </li>
-          </EditMenu>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">Negative Response</h2>
         </header>
-        <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase mb-1">Sales</div>
         <div className="flex items-start">
-          <div className="text-3xl font-bold text-gray-800 dark:text-gray-100 mr-2">$17,489</div>
+          <div className="text-3xl font-bold text-gray-800 dark:text-gray-100 mr-2">7,489</div>
           <div className="text-sm font-medium text-red-700 px-1.5 bg-red-500/20 rounded-full">-14%</div>
         </div>
       </div>

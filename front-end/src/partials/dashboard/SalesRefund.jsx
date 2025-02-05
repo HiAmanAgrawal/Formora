@@ -19,8 +19,8 @@ function DashboardCard09() {
         data: [
           6200, 9200, 6600, 8800, 5200, 9200,
         ],
-        backgroundColor: getCssVariable('--color-violet-500'),
-        hoverBackgroundColor: getCssVariable('--color-violet-600'),
+        backgroundColor: getCssVariable('--color-blue-400'),
+        hoverBackgroundColor: getCssVariable('--color-blue-600'),
         barPercentage: 0.7,
         categoryPercentage: 0.7,
         borderRadius: 4,
@@ -31,8 +31,8 @@ function DashboardCard09() {
         data: [
           -4000, -2600, -5350, -4000, -7500, -2000,
         ],
-        backgroundColor: getCssVariable('--color-violet-200'),
-        hoverBackgroundColor: getCssVariable('--color-violet-300'),
+        backgroundColor: getCssVariable('--color-blue-200'),
+        hoverBackgroundColor: getCssVariable('--color-blue-300'),
         barPercentage: 0.7,
         categoryPercentage: 0.7,
         borderRadius: 4,
@@ -40,6 +40,49 @@ function DashboardCard09() {
     ],
   };
 
+  {/*
+    function DashboardCard09() {
+  const [chartData, setChartData] = useState({ labels: [], datasets: [] });
+
+  useEffect(() => {
+    async function fetchChartData() {
+      try {
+        const response = await fetch('https://api.example.com/sales-vs-refunds'); // Replace with your API endpoint
+        const data = await response.json();
+        
+        setChartData({
+          labels: data.labels,
+          datasets: [
+            {
+              label: 'Stack 1',
+              data: data.stack1,
+              backgroundColor: getCssVariable('--color-blue-400'),
+              hoverBackgroundColor: getCssVariable('--color-blue-600'),
+              barPercentage: 0.7,
+              categoryPercentage: 0.7,
+              borderRadius: 4,
+            },
+            {
+              label: 'Stack 2',
+              data: data.stack2,
+              backgroundColor: getCssVariable('--color-blue-200'),
+              hoverBackgroundColor: getCssVariable('--color-blue-300'),
+              barPercentage: 0.7,
+              categoryPercentage: 0.7,
+              borderRadius: 4,
+            },
+          ],
+        });
+      } catch (error) {
+        console.error('Error fetching chart data:', error);
+      }
+    }
+
+    fetchChartData();
+  }, []);
+
+  */}
+  
   return (
     <div className="flex flex-col col-span-full sm:col-span-6 bg-white dark:bg-gray-800 shadow-xs rounded-xl">
       <header className="px-5 py-4 border-b border-gray-100 dark:border-gray-700/60 flex items-center">
