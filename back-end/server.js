@@ -1,20 +1,17 @@
 import express from "express";
-import cors from "cors";
-import routes from "./routes/route"
+import bodyParser from "body-parser";
+import routes from "./routes/route.js"; // Ensure the correct file extension (.js)
 
 const app = express();
-app.use('/api', routes)
-app.use(
-  cors(),
-);
-const port = 8080;
-app.listen(port, () => {
-  console.log(`🚀 Server is running at http://localhost:${port}/`);
-  // if (isConnected()) {
-  //   console.log("📦 MongoDB Connected with Server, Successfully!");
-  // }
-});
 
-app.get("/", (req, res) => {
-  res.send("🚀 Server started successfully");
+// Middleware
+app.use(bodyParser.json()); // Middleware to parse JSON data
+
+// Routes
+app.use('/api', routes);
+
+// Server setup
+const port = 8081;
+app.listen(port, () => {
+    console.log(`🚀 Server is running at http://localhost:${port}/`);
 });
