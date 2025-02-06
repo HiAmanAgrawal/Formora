@@ -55,4 +55,4 @@ Formora transforms ordinary forms into intelligent conversations. Think of it as
 ## 🚀 User Flow 
 | Image 1 | Image 2 |
 |---------|---------|
-| ![Alt1](assets/image1.png) | ![Alt2](assets/image2.png) |
+| ![Alt1](assets/WhatsApp%20Image%202025-02-06%20at%2011.07.05_1a26c93f.jpg) | ![Alt2](assets/WhatsApp%20Image%202025-02-06%20at%2011.19.46_2b38f89b.jpg) |
