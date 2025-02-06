@@ -11,26 +11,23 @@ def extract_json(text):
         return match.group(0)
     return None
 
-def analyze_feedback(feedback_data):
-    formatted_feedback = "\n".join([f"- {q['question']}: {q['answer']}" for q in feedback_data])
+def analyze_cross_feedback(feedback_forms):
+    formatted_feedback = ""
+    for i, form in enumerate(feedback_forms, 1):
+        formatted_feedback += f"\n### Feedback Form {i} ###\n"
+        formatted_feedback += "\n".join([f"- {q['question']}: {q['answer']}" for q in form['questions']])
+        formatted_feedback += "\n\n"
 
     prompt = f"""
-    Analyze the following feedback responses and structure the results into the specified categories. 
+    Analyze the following multiple feedback forms to identify common themes, strengths, weaknesses, and provide a strategy to improve. 
     Return **only JSON**—no explanations, introductions, or additional text.
 
     JSON format:
     {{
-      "overview": {{
-        "total_forms": 0,
-        "sentiment_distribution": {{"positive": 0, "negative": 0, "neutral": 0}},
-        "category_distribution": {{"urgent": 0, "negative_feedback": 0, "positive_feedback": 0, "other": 0}},
-        "common_themes": []
-      }},
-      "urgent_requirements": [],
-      "negative_feedback": [],
-      "positive_feedback": [],
-      "other_insights": [],
-      "recommendations": []
+      "common_themes": [],
+      "strengths": [],
+      "weaknesses": [],
+      "strategic_recommendations": []
     }}
 
     Feedback Data:
@@ -64,13 +61,11 @@ def analyze_feedback(feedback_data):
 if __name__ == "__main__":
     try:
         input_data = json.loads(sys.argv[1])
-        feedback_questions = input_data.get("questions", [])
-
-        if not feedback_questions:
-            print(json.dumps({"error": "No feedback data provided"}))
+        if not input_data or len(input_data) < 2:
+            print(json.dumps({"error": "Not enough feedback forms for analysis"}))
             sys.exit(1)
 
-        analysis_result = analyze_feedback(feedback_questions)
+        analysis_result = analyze_cross_feedback(input_data)
         print(json.dumps(analysis_result, indent=2))
     
     except json.JSONDecodeError:
