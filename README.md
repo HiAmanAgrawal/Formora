@@ -41,17 +41,6 @@ Formora transforms ordinary forms into intelligent conversations. Think of it as
 * **Follow-up System**: Automatically sends relevant follow-up messages
 * **Integration Ready**: Works with your existing email and support tools
 
-## 🎯 Perfect For
-* Customer Support Teams
-* Marketing Researchers
-* HR Departments
-* Product Teams
-* Anyone collecting and analyzing feedback
-
-## 🔗 Links
-* [Interactive Prototype](https://www.figma.com/proto/P8LEaPIRzVhr8mbn9zRVGV/Form?node-id=25-8&p=f&t=xdElCxss2ylLVvWS-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=25%3A8)
-* [Presentation](https://www.canva.com/design/DAGd1HwCBVg/VPA1CFpRS_GJa4ik-WotCw/edit?utm_content=DAGd1HwCBVg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
-
 ## 🧑‍🏫How will promptrepo get integrated
 *  **Tone Analysis & Refinement**: Detects and refines aggressive tones
 *  **Structured Data Extraction**: Converts unstructured feedback into actionable insights
@@ -59,7 +48,23 @@ Formora transforms ordinary forms into intelligent conversations. Think of it as
 *  **Support Forum Enhancement**: Auto-categorization and instant AI responses
 *  **Finetuning Capabilities**: Customizes AI responses to match brand voice
 
+## 🎯 Perfect For
+* Customer Support Teams
+* Marketing Researchers
+* HR Departments
+* Product Teams
+* Anyone collecting and analyzing feedback
+
 ## 🚀 User Flow 
 | Dashboard Flow | User Flow |
 |---------|---------|
 | ![Alt1](assets/WhatsApp%20Image%202025-02-06%20at%2011.07.05_1a26c93f.jpg) | ![Alt2](assets/WhatsApp%20Image%202025-02-06%20at%2011.19.46_2b38f89b.jpg) |
+
+## 🧑‍💻Tech stack 
+* Front-end - React, Tailwing
+* Back-end - Node.js, MongoDB, Express
+* AI-model - Python
+
+## 🔗 Links
+* [Interactive Prototype](https://www.figma.com/proto/P8LEaPIRzVhr8mbn9zRVGV/Form?node-id=25-8&p=f&t=xdElCxss2ylLVvWS-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=25%3A8)
+* [Presentation](https://www.canva.com/design/DAGd1HwCBVg/VPA1CFpRS_GJa4ik-WotCw/edit?utm_content=DAGd1HwCBVg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
