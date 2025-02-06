@@ -11,7 +11,7 @@ import './charts/ChartjsConfig';
 
 // Import pages
 import Dashboard from './pages/Dashboard';
-
+import Landing from "./pages/Landing.jsx";
 function App() {
 
   const location = useLocation();
@@ -25,7 +25,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route exact path="/" element={<Dashboard />} />
+        <Route exact path="/" element={<Landing />} />
       </Routes>
     </>
   );
