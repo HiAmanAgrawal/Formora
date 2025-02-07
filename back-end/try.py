@@ -5,78 +5,100 @@ import re
 from groq import Groq
 
 def extract_json(text):
-    """Extracts the first valid JSON object from a given text string."""
+    """Extracts valid JSON from a response string."""
     match = re.search(r'\{.*\}', text, re.DOTALL)
     if match:
-        return match.group(0)
-    return None
+        try:
+            return json.loads(match.group(0))
+        except json.JSONDecodeError:
+            return {"error": "AI response did not contain valid JSON"}
+    return {"error": "No JSON found in AI response"}
 
 def analyze_feedback(feedback_data):
     formatted_feedback = "\n".join([f"- {q['question']}: {q['answer']}" for q in feedback_data])
 
     prompt = f"""
-    Analyze the following feedback responses and structure the results into the specified categories. 
-    Return **only JSON**—no explanations, introductions, or additional text.
+Analyze the following feedback responses and generate a structured summary. Extract insights based on sentiment, urgency, and common themes. 
+Return **only JSON**—no explanations, introductions, or additional text.
 
-    JSON format:
-    {{
-      "overview": {{
-        "total_forms": 0,
-        "sentiment_distribution": {{"positive": 0, "negative": 0, "neutral": 0}},
-        "category_distribution": {{"urgent": 0, "negative_feedback": 0, "positive_feedback": 0, "other": 0}},
-        "common_themes": []
-      }},
-      "urgent_requirements": [],
-      "negative_feedback": [],
-      "positive_feedback": [],
-      "other_insights": [],
-      "recommendations": []
+JSON format:
+{{
+  "positiveResponses": {{
+    "total": 0,
+    "percentageChange": "0%",
+    "chartData": {{
+      "labels": [],
+      "values": []
     }}
+  }},
+  "negativeResponses": {{
+    "total": 0,
+    "percentageChange": "0%",
+    "chartData": {{
+      "labels": [],
+      "values": []
+    }}
+  }},
+  "responseTrend": {{
+    "labels": [],
+    "values": []
+  }},
+  "sentiment": {{
+    "positive": 0,
+    "negative": 0,
+    "neutral": 0
+  }},
+  "salesOverTime": {{
+    "labels": [],
+    "values": []
+  }},
+  "salesRefund": {{
+    "sales": 0,
+    "refunds": 0
+  }},
+  "reasons": [],
+  "recentActivity": []
+}}
+"""
 
-    Feedback Data:
-    {formatted_feedback}
-    """
-
-    api_key = os.getenv("GROQ_API")
-    if not api_key:
-        return {"error": "API key not found"}
+    # Initialize Groq AI
+    api_key = "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" 
+    client = Groq(api_key=api_key) 
 
     try:
-        client = Groq(api_key=api_key)
-        chat_completion = client.chat.completions.create(
-            messages=[{"role": "user", "content": prompt}],
-            model="llama3-8b-8192"
+        response = client.chat.completions.create(
+            model="llama3-8b-8192",
+            messages=[{"role": "system", "content": prompt},
+                      {"role": "user", "content": formatted_feedback}],
+            temperature=0.2
         )
-        
-        raw_response = chat_completion.choices[0].message.content
-        json_text = extract_json(raw_response)
+        result_text = response.choices[0].message.content
+        return extract_json(result_text)
 
-        if not json_text:
-            return {"error": "AI did not return valid JSON"}
-
-        return json.loads(json_text)
-
-    except json.JSONDecodeError:
-        return {"error": "Invalid JSON output from AI"}
     except Exception as e:
-        return {"error": f"AI API error: {str(e)}"}
+        return {"error": str(e)}
 
 if __name__ == "__main__":
     try:
-        input_data = json.loads(sys.argv[1])
-        feedback_questions = input_data.get("questions", [])
-
-        if not feedback_questions:
-            print(json.dumps({"error": "No feedback data provided"}))
+        # Validate that the input is passed correctly as a JSON string
+        if len(sys.argv) < 2:
+            print(json.dumps({"error": "Missing input data. Please provide JSON formatted data as a command-line argument."}))
             sys.exit(1)
 
-        analysis_result = analyze_feedback(feedback_questions)
-        print(json.dumps(analysis_result, indent=2))
-    
+        # Parse the input JSON
+        input_data = json.loads(sys.argv[1])
+
+        # Check if the "questions" key is present
+        if "questions" not in input_data:
+            print(json.dumps({"error": "Invalid input format. Ensure 'questions' key is present with an array of questions and answers."}))
+            sys.exit(1)
+
+        # Proceed with analyzing the feedback
+        feedback_data = input_data["questions"]
+        output = analyze_feedback(feedback_data)
+        print(json.dumps(output))  # Ensure only valid JSON is printed
+
     except json.JSONDecodeError:
-        print(json.dumps({"error": "Invalid JSON input"}))
-        sys.exit(1)
-    
+        print(json.dumps({"error": "Invalid JSON format. Please ensure the input is valid JSON."}))
     except Exception as e:
-        print(json.dumps({"error": f"Unexpected error: {str(e)}"}))
-        sys.exit(1)
+        print(json.dumps({"error": str(e)}))
