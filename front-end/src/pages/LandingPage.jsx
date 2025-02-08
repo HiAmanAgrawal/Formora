@@ -197,7 +197,7 @@ const LandingPage = () => {
     ];
 
     return (
-        <Box sx={{ background: 'linear-gradient(180deg, #FAF5FF 0%, #FDF2F8 100%)', minHeight: '100vh' }}>
+        <Box sx={{ background: 'linear-gradient(180deg, #FAF5FF 0%, #FDF2F8 100%)', minHeight: '100vh' , minWidth: '100vw'}}>
 
             {/* Navigation */}
             <StyledAppBar position="static" sx={{ backgroundColor: '#F2E9F2', color: '#000' }}>
