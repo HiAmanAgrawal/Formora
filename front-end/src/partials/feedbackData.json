@@ -2,16 +2,16 @@
     "strategies": [
       {
         "id": 1,
-        "title": "Reduce Plastic Usage",
+        "title": "Alteration in sizes",
         "status": "ACTIVE",
         "year": "2025",
         "actions": [
           {
-            "description": "30% less PET bottles",
+            "description": "Make the sizes consistent",
             "completed": true
           },
           {
-            "description": "40% less plastic bags",
+            "description": "Add more sizes",
             "completed": true
           }
         ]

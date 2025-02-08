@@ -53,17 +53,39 @@ function Dashboard() {
 
             {/* Cards */}
             <div className="grid grid-cols-12 gap-6">
-              <PositiveResponse data={dashboardData.positiveResponses} />
-              <NegativeResponse data={dashboardData.negativeResponses} />
-              <Recent 
-                feedbacks={dashboardData.recentActivity?.feedbacks || []} 
-                highPriority={dashboardData.recentActivity?.highPriority || []} 
-              />
-              <ResponseTrend data={dashboardData.responseTrend} />
-              <Sentiment data={dashboardData.sentiment} />
-              <SalesRefund data={dashboardData.salesRefund || {}} />
-              <Reason data={dashboardData.reasons || {}} />
-              <Customers customers={dashboardData.customers || []} />
+              {/* Positive & Negative Response Side-by-Side */}
+              <div className="col-span-6 p-4 bg-white dark:bg-gray-800 shadow-2xl rounded-lg">
+                <PositiveResponse data={dashboardData.positiveResponses} />
+              </div>
+              <div className="col-span-6 p-4 bg-white dark:bg-gray-800 shadow-2xl rounded-lg">
+                <NegativeResponse data={dashboardData.negativeResponses} />
+              </div>
+
+              {/* Other Dashboard Components with Shadows */}
+              <div className="col-span-12 p-4 bg-white dark:bg-gray-800 shadow-2xl rounded-lg">
+                <Recent 
+                  feedbacks={dashboardData.recentActivity?.feedbacks || []} 
+                  highPriority={dashboardData.recentActivity?.highPriority || []} 
+                />
+              </div>
+
+              <div className="col-span-6 p-4 bg-white dark:bg-gray-800 shadow-2xl rounded-lg">
+                <ResponseTrend data={dashboardData.responseTrend} />
+              </div>
+              <div className="col-span-6 p-4 bg-white dark:bg-gray-800 shadow-2xl rounded-lg">
+                <Sentiment data={dashboardData.sentiment} />
+              </div>
+
+              <div className="col-span-6 p-4 bg-white dark:bg-gray-800 shadow-2xl rounded-lg">
+                <SalesRefund data={dashboardData.salesRefund || {}} />
+              </div>
+              <div className="col-span-6 p-4 bg-white dark:bg-gray-800 shadow-2xl rounded-lg">
+                <Reason data={dashboardData.reasons || {}} />
+              </div>
+
+              <div className="col-span-12 p-4 bg-white dark:bg-gray-800 shadow-2xl rounded-lg">
+                <Customers customers={dashboardData.customers || []} />
+              </div>
             </div>
           </div>
         </main>
