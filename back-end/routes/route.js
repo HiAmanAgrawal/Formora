@@ -43,6 +43,7 @@ routes.post("/signup", async (req, res) => {
       res.status(500).json({ message: "Error registering user", error: error.message || error });
     }
   });
+
   routes.post("/login", async (req, res) => {
     try {
       const { email, password } = req.body;
@@ -120,12 +121,21 @@ routes.post("/generate-summary", async (req, res) => {
 });
 routes.get("/get-summaries", async (req, res) => {
     try {
-        const summaries = await Summary.find().populate("inputId").sort({ createdAt: -1 });
-        res.json(summaries);
+        const latestSummary = await Summary.findOne().sort({ createdAt: -1 }); // ❌ Removed .populate("inputId")
+
+        if (!latestSummary) {
+            return res.status(404).json({ error: "No summaries found" });
+        }
+
+        res.json(latestSummary);
     } catch (error) {
-        res.status(500).json({ error: "Error retrieving summaries" });
+        console.error("Error retrieving summary:", error);
+        res.status(500).json({ error: "Error retrieving summary", details: error.message });
     }
 });
+
+
+
 
 routes.get('/analyze-cross-feedback', async (req, res) => {
     try {
