@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 import FilterButton from '../components/DropdownFilter';
@@ -11,80 +11,101 @@ import DashboardCard08 from '../partials/dashboard/DashboardCard08';
 import SalesRefund from '../partials/dashboard/SalesRefund';
 import Reason from '../partials/dashboard/Reason';
 import Recent from '../partials/dashboard/Recent';
+import DashboardCard07 from '../partials/dashboard/DashboardCard07';
+import Customers from '../partials/dashboard/Customers';
+import DashboardCard13 from '../partials/dashboard/DashboardCard13';
 
+
+import dashboardDataJSON from '../partials/dashboard/dashboardData.json';
 
 function Dashboard() {
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/api/get-summaries");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        
+        // Log API response
+        console.log("Received data from API:", data);
+  
+        setDashboardData(data);
+      } catch (err) {
+        setError("Failed to fetch data");
+        console.error("Error fetching API:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchData();
+  }, []);  
+  
 
   return (
     <div className="flex h-screen overflow-hidden">
-
       {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-      {/* Content area */}
+      {/* Content Area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-
-        {/*  Site header */}
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         <main className="grow">
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
-
-            {/* Dashboard actions */}
+            {/* Dashboard Actions */}
             <div className="sm:flex sm:justify-between sm:items-center mb-8">
-
-              {/* Left: Title */}
               <div className="mb-4 sm:mb-0">
-                <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">Dashboard</h1>
+                <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">
+                  Dashboard
+                </h1>
               </div>
-
-              {/* Right: Actions */}
               <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
-                {/* Filter button */}
                 <FilterButton align="right" />
-                {/* Datepicker built with React Day Picker */}
                 <Datepicker align="right" />
-                {/* Add view button */}
                 <button className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white">
                   <svg className="fill-current shrink-0 xs:hidden" width="16" height="16" viewBox="0 0 16 16">
                     <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
                   </svg>
                   <span className="max-xs:sr-only">Add View</span>
-                </button>                
+                </button>
               </div>
-
             </div>
 
-            {/* Cards */}
-            <div className="grid grid-cols-12 gap-6">
+            {/* Loading & Error Messages */}
+            {loading && <div className="text-center text-lg">Loading dashboard data...</div>}
+            {error && <div className="text-center text-lg text-red-500">{error}</div>}
 
-              {/* Positive Response */}
-              <PositiveResponse />
-              {/* Negative Response */}
-              <NegativeResponse />
-              {/* Response Trend */}
-              <ResponseTrend />
-              {/* Sentiment */}
-              <Sentiment />
+            {/* Cards (Rendered Even if Data is Missing) */}
+            {!loading && !error && dashboardData ? (
+             <div className="grid grid-cols-12 gap-6">
+                <PositiveResponse data={dashboardData.summary?.positiveResponses} />
+                <NegativeResponse data={dashboardData.summary?.negativeResponses} />
+                <Recent feedbacks={dashboardData.summary?.recentActivity?.feedbacks || []} 
+                highPriority={dashboardData.summary?.recentActivity?.highPriority || []} 
+                />
+                <ResponseTrend data={dashboardData.summary?.responseTrend} />
+                <Sentiment data={dashboardData.summary?.sentiment} />
+                <SalesRefund data={dashboardData.summary || {}} />
 
-              {/* Line chart (Sales Over Time) }
-              <DashboardCard08 />
+                <Reason data={dashboardData.summary?.reasons || {}} />
 
-              {/* Sales VS Refunds */}
-              <SalesRefund />
-              {/* Reason */}
-              <Reason />
-              {/* Card (Recent Activity) */}
-              <Recent />
-             
-              
-            </div>
+                <Customers customers={dashboardData.summary?.customers || []} />
+          
+  </div>
+) : (
+  <div className="text-center text-lg text-gray-500">No data available.</div>
+)}
 
           </div>
         </main>
-
       </div>
     </div>
   );
