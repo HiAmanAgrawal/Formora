@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 import FilterButton from '../components/DropdownFilter';
@@ -15,39 +15,11 @@ import DashboardCard07 from '../partials/dashboard/DashboardCard07';
 import Customers from '../partials/dashboard/Customers';
 import DashboardCard13 from '../partials/dashboard/DashboardCard13';
 
-
 import dashboardDataJSON from '../partials/dashboard/dashboardData.json';
 
 function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [dashboardData, setDashboardData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/api/get-summaries");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        
-        // Log API response
-        console.log("Received data from API:", data);
-  
-        setDashboardData(data);
-      } catch (err) {
-        setError("Failed to fetch data");
-        console.error("Error fetching API:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    fetchData();
-  }, []);  
-  
+  const [dashboardData] = useState(dashboardDataJSON); // Directly using imported JSON
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -79,31 +51,20 @@ function Dashboard() {
               </div>
             </div>
 
-            {/* Loading & Error Messages */}
-            {loading && <div className="text-center text-lg">Loading dashboard data...</div>}
-            {error && <div className="text-center text-lg text-red-500">{error}</div>}
-
-            {/* Cards (Rendered Even if Data is Missing) */}
-            {!loading && !error && dashboardData ? (
-             <div className="grid grid-cols-12 gap-6">
-                <PositiveResponse data={dashboardData.summary?.positiveResponses} />
-                <NegativeResponse data={dashboardData.summary?.negativeResponses} />
-                <Recent feedbacks={dashboardData.summary?.recentActivity?.feedbacks || []} 
-                highPriority={dashboardData.summary?.recentActivity?.highPriority || []} 
-                />
-                <ResponseTrend data={dashboardData.summary?.responseTrend} />
-                <Sentiment data={dashboardData.summary?.sentiment} />
-                <SalesRefund data={dashboardData.summary || {}} />
-
-                <Reason data={dashboardData.summary?.reasons || {}} />
-
-                <Customers customers={dashboardData.summary?.customers || []} />
-          
-  </div>
-) : (
-  <div className="text-center text-lg text-gray-500">No data available.</div>
-)}
-
+            {/* Cards */}
+            <div className="grid grid-cols-12 gap-6">
+              <PositiveResponse data={dashboardData.positiveResponses} />
+              <NegativeResponse data={dashboardData.negativeResponses} />
+              <Recent 
+                feedbacks={dashboardData.recentActivity?.feedbacks || []} 
+                highPriority={dashboardData.recentActivity?.highPriority || []} 
+              />
+              <ResponseTrend data={dashboardData.responseTrend} />
+              <Sentiment data={dashboardData.sentiment} />
+              <SalesRefund data={dashboardData.salesRefund || {}} />
+              <Reason data={dashboardData.reasons || {}} />
+              <Customers customers={dashboardData.customers || []} />
+            </div>
           </div>
         </main>
       </div>
