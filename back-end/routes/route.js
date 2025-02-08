@@ -5,6 +5,7 @@ import Feedback from '../models/feedback.js';
 import User from "../models/userModel.js"; 
 import bcrypt from "bcryptjs";
 import Summary from '../models/aisummary.js';
+import Form from '../models/formTemplate.model.js';
 import InputData from "../models/inputmodel.js"; 
 import jwt from "jsonwebtoken";
 
@@ -269,5 +270,64 @@ routes.get("/get-inputs", async (req, res) => {
     }
 });
 
+// Create a new form
+routes.post("/forms", async (req, res) => {
+  try {
+    const form = new Form(req.body);
+    await form.save();
+    res.status(201).json({ success: true, message: "Form created successfully", form });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+});
+
+// Get all forms
+routes.get("/forms", async (req, res) => {
+  try {
+    const forms = await Form.find();
+    res.status(200).json({ success: true, forms });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Get a specific form by ID
+routes.get("/forms/:id", async (req, res) => {
+  try {
+    const form = await Form.findById(req.params.id);
+    if (!form) {
+      return res.status(404).json({ success: false, message: "Form not found" });
+    }
+    res.status(200).json({ success: true, form });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Update a form by ID
+routes.put("/forms/:id", async (req, res) => {
+  try {
+    const form = await Form.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    if (!form) {
+      return res.status(404).json({ success: false, message: "Form not found" });
+    }
+    res.status(200).json({ success: true, message: "Form updated successfully", form });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+});
+
+// Delete a form by ID
+routes.delete("/forms/:id", async (req, res) => {
+  try {
+    const form = await Form.findByIdAndDelete(req.params.id);
+    if (!form) {
+      return res.status(404).json({ success: false, message: "Form not found" });
+    }
+    res.status(200).json({ success: true, message: "Form deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
 
 export default routes;
