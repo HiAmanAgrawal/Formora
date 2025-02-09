@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 import Summary from '../models/aisummary.js';
 import Form from '../models/formTemplate.model.js';
 import InputData from "../models/inputmodel.js"; 
+import CrossFormAnalysisSummary from '../models/CrossFormAnalysisSummary.js';
 import jwt from "jsonwebtoken";
 
 const routes = express.Router();
@@ -140,9 +141,9 @@ routes.get("/get-summaries", async (req, res) => {
 
 routes.get('/analyze-cross-feedback', async (req, res) => {
     try {
-        // Fetch the latest input data and summary
+        // Fetch the latest input data
         const inputData = await InputData.find().sort({ createdAt: -1 }).limit(2);
-        const summaryData = await Summary.find().sort({ createdAt: -1 }).limit(1);
+        console.log("Fetched inputData:", inputData);
 
         if (!inputData || inputData.length < 2) {
             return res.status(400).json({ error: 'Not enough input data for analysis' });
@@ -152,7 +153,8 @@ routes.get('/analyze-cross-feedback', async (req, res) => {
         let errorData = '';
 
         // Pass input data to the Python script
-        const pythonProcess = spawn('python3', ['strategy.py', JSON.stringify(inputData)]);
+        const inputString = JSON.stringify(inputData).replace(/[\u2028\u2029]/g, '');
+        const pythonProcess = spawn('python3', ['strategy.py', inputString]);
 
         pythonProcess.stdout.on('data', (data) => {
             outputData += data.toString();
@@ -177,21 +179,20 @@ routes.get('/analyze-cross-feedback', async (req, res) => {
                 const jsonEnd = outputData.lastIndexOf('}');
                 const jsonResponse = JSON.parse(outputData.slice(jsonStart, jsonEnd + 1));
 
-                // Save the new AI-generated summary
-                const newSummary = new Summary({
-                    commonThemes: jsonResponse.common_themes,
-                    strengths: jsonResponse.strengths,
-                    weaknesses: jsonResponse.weaknesses,
-                    strategicRecommendations: jsonResponse.strategic_recommendations,
-                    summary: jsonResponse.summary,
+                if (!jsonResponse.summary) {
+                    return res.status(500).json({ error: 'Summary key missing in AI response', details: jsonResponse });
+                }
+
+                // Save only the summary object in the model
+                const newSummary = new CrossFormAnalysisSummary({
+                    summary: jsonResponse.summary
                 });
 
                 await newSummary.save();
 
                 res.json({
                     message: 'Cross-feedback analysis completed',
-                    previousSummary: summaryData || null,
-                    newSummary: jsonResponse,
+                    newSummary: jsonResponse.summary,
                 });
             } catch (error) {
                 console.error('JSON Parse Error:', error.message);
