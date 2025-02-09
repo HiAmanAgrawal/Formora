@@ -1,15 +1,16 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from '@tailwindcss/vite'
 
-// https://vitejs.dev/config/
+// https://vite.dev/config/
 export default defineConfig({
   define: {
     'process.env': process.env
   },
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   build: {
     commonjsOptions: {
       transformMixedEsModules: true,
     }
   } 
-})
+});

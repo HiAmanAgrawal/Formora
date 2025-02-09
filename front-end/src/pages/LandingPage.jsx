@@ -40,7 +40,7 @@ import { motion } from 'framer-motion';
 import { Close, CheckCircle } from '@mui/icons-material';
 import styled, { keyframes } from 'styled-components';
 import axios from 'axios'; 
-
+import { useNavigate } from 'react-router-dom';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -128,6 +128,7 @@ const RatingStars = ({ rating }) => {
 };
 
 const LandingPage = () => {
+    const navigate = useNavigate();
     const [loginOpen, setLoginOpen] = useState(false);
     const [signupOpen, setSignupOpen] = useState(false);
     const [subscribeEmail, setSubscribeEmail] = useState('');
@@ -258,8 +259,11 @@ const LandingPage = () => {
             console.error('Signup error:', error);
             setSignupError(error.response?.data?.message || 'An error occurred during signup.');
         }
+        Navi();
     };
-
+    const Navi = () =>{
+        navigate('/MainDashboard')
+    }
     const handleLogin = async () => {
         if (!loginEmail || !loginPassword) {
             setLoginError('Please enter both email and password.');
@@ -284,10 +288,11 @@ const LandingPage = () => {
             console.error('Login error:', error);
             setLoginError(error.response?.data?.message || 'Invalid credentials!');
         }
+        Navi();
     };
 
     return (
-        <Box sx={{ background: 'linear-gradient(180deg, #FAF5FF 0%, #FDF2F8 100%)', minHeight: '100vh' }}>
+        <Box sx={{ background: 'linear-gradient(180deg, #FAF5FF 0%, #FDF2F8 100%)', minHeight: '100vh' , minWidth: '100vw'}}>
 
             <StyledAppBar position="static" sx={{ backgroundColor: '#F2E9F2', color: '#000' }}>
                <Container maxWidth="lg" >
