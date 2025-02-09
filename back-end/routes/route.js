@@ -9,8 +9,34 @@ import Form from '../models/formTemplate.model.js';
 import InputData from "../models/inputmodel.js"; 
 import CrossFormAnalysisSummary from '../models/CrossFormAnalysisSummary.js';
 import jwt from "jsonwebtoken";
+// import { appendToSheet } from "../utils/googleSheetUtils.js";
+
+
 
 const routes = express.Router();
+
+// routes.post("/add-data", async (req, res) => {
+//     try {
+//       // Example hardcoded data, replace with req.body data
+//       const data = [
+//         "John Doe", // Name
+//         "john@example.com", // Email
+//         "Software Engineer", // Job
+//         "Approved", // Status
+//       ];
+  
+//       const success = await appendToSheet(data);
+  
+//       if (success) {
+//         return res.status(200).json({ message: "Data added to Google Sheet successfully!" });
+//       } else {
+//         return res.status(500).json({ error: "Failed to append data to Google Sheets" });
+//       }
+//     } catch (error) {
+//       console.error("Server error:", error);
+//       res.status(500).json({ error: "Internal server error" });
+//     }
+//   });
 
 routes.post("/signup", async (req, res) => {
     try {
@@ -330,5 +356,29 @@ routes.delete("/forms/:id", async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 });
+
+// routes.post("/add-to-sheet", async (req, res) => {
+//     try {
+//       const { name, email, job, status } = req.body;
+  
+//       if (!name || !email || !job || !status) {
+//         return res.status(400).json({ message: "All fields are required" });
+//       }
+  
+//       const data = [name, email, job, status]; // Example data format
+  
+//       // Call the function to append data to Google Sheets
+//       const success = await appendToSheet(data);
+  
+//       if (success) {
+//         return res.status(200).json({ message: "Data added to Google Sheets successfully!" });
+//       } else {
+//         return res.status(500).json({ error: "Failed to append data to Google Sheets" });
+//       }
+//     } catch (error) {
+//       console.error("Error adding data to Google Sheets:", error);
+//       res.status(500).json({ error: "Internal server error" });
+//     }
+//   });
 
 export default routes;
