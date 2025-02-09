@@ -11,7 +11,7 @@ import './charts/ChartjsConfig';
 
 // Import pages
 import Dashboard from './pages/Dashboard';
-import Landing from "./pages/Landing.jsx";
+import Landing from "./pages/LandingPage.jsx";
 function App() {
 
   const location = useLocation();
