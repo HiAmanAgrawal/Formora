@@ -23,6 +23,9 @@ import {
     useTheme,
     Avatar,
     Stack,
+    InputLabel,
+    MenuItem,
+    Select,
 } from '@mui/material';
 import {
     LineChart,
@@ -35,21 +38,25 @@ import {
 } from 'recharts';
 import { motion } from 'framer-motion';
 import { Close, CheckCircle } from '@mui/icons-material';
-import { Parallax } from 'react-parallax';
 import styled, { keyframes } from 'styled-components';
+import axios from 'axios'; 
+import { useNavigate } from 'react-router-dom';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import moment from 'moment';
 
 const chartData = [
     { name: 'Oct 2021', achieved: 4, target: 6 },
     { name: 'Nov 2021', achieved: 6, target: 4 },
     { name: 'Dec 2021', achieved: 7, target: 5 },
-    { name: 'Jan 2022', achieved: 5, target: 7 },
 ];
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-// Styled Components
+
 const StyledDialog = styled(Dialog)`
   .MuiPaper-root {
     border-radius: 12px;
@@ -121,11 +128,28 @@ const RatingStars = ({ rating }) => {
 };
 
 const LandingPage = () => {
+    const navigate = useNavigate();
     const [loginOpen, setLoginOpen] = useState(false);
     const [signupOpen, setSignupOpen] = useState(false);
     const [subscribeEmail, setSubscribeEmail] = useState('');
     const [subscribeSuccess, setSubscribeSuccess] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+
+    const [loginEmail, setLoginEmail] = useState('');
+    const [loginPassword, setLoginPassword] = useState('');
+    const [loginError, setLoginError] = useState('');
+
+
+    const [signupName, setSignupName] = useState('');
+    const [signupUsername, setSignupUsername] = useState('');
+    const [signupEmail, setSignupEmail] = useState('');
+    const [signupPassword, setSignupPassword] = useState('');
+    const [signupConfirmPassword, setSignupConfirmPassword] = useState('');
+    const [signupDob, setSignupDob] = useState(null);
+    const [signupGender, setSignupGender] = useState('');
+    const [signupError, setSignupError] = useState('');
+    const [signupSuccessMessage, setSignupSuccessMessage] = useState('');
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -136,6 +160,9 @@ const LandingPage = () => {
 
     const handleLoginClose = () => {
         setLoginOpen(false);
+        setLoginError('');
+        setLoginEmail('');
+        setLoginPassword('');
     };
 
     const handleSignupOpen = () => {
@@ -144,6 +171,15 @@ const LandingPage = () => {
 
     const handleSignupClose = () => {
         setSignupOpen(false);
+        setSignupError('');
+        setSignupName('');
+        setSignupUsername('');
+        setSignupEmail('');
+        setSignupPassword('');
+        setSignupConfirmPassword('');
+        setSignupDob(null);
+        setSignupGender('');
+        setSignupSuccessMessage('');
     };
 
     const cardVariants = {
@@ -196,10 +232,68 @@ const LandingPage = () => {
         },
     ];
 
+    const handleSignup = async () => {
+        if (!signupName || !signupUsername || !signupEmail || !signupPassword || signupPassword !== signupConfirmPassword || !signupDob || !signupGender) {
+            setSignupError('Please fill in all fields correctly, and make sure passwords match.');
+            return;
+        }
+
+        try {
+          const dobFormatted = moment(signupDob).format('YYYY-MM-DD');
+            const response = await axios.post('http://localhost:8080/api/signup', {
+                name: signupName,
+                username: signupUsername,
+                email: signupEmail,
+                password: signupPassword,
+                dob: dobFormatted,
+                gender: signupGender
+            });
+
+            if (response.status === 201) {
+                setSignupSuccessMessage('Signup successful! You can now login.');
+                setSignupError('');
+            } else {
+                setSignupError('Signup failed.  Please try again.');
+            }
+        } catch (error) {
+            console.error('Signup error:', error);
+            setSignupError(error.response?.data?.message || 'An error occurred during signup.');
+        }
+        Navi();
+    };
+    const Navi = () =>{
+        navigate('/MainDashboard')
+    }
+    const handleLogin = async () => {
+        if (!loginEmail || !loginPassword) {
+            setLoginError('Please enter both email and password.');
+            return;
+        }
+
+        try {
+            const response = await axios.post('http://localhost:8080/api/login', {
+                email: loginEmail,
+                password: loginPassword
+            });
+
+            if (response.status === 200) {
+                console.log('Login successful:', response.data);
+                setLoginError('');
+                handleLoginClose();
+                alert('Login Successful!');
+            } else {
+                setLoginError('Login failed. Please check your credentials.');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            setLoginError(error.response?.data?.message || 'Invalid credentials!');
+        }
+        Navi();
+    };
+
     return (
         <Box sx={{ background: 'linear-gradient(180deg, #FAF5FF 0%, #FDF2F8 100%)', minHeight: '100vh' , minWidth: '100vw'}}>
 
-            {/* Navigation */}
             <StyledAppBar position="static" sx={{ backgroundColor: '#F2E9F2', color: '#000' }}>
                <Container maxWidth="lg" >
                     <StyledToolbar>
@@ -220,7 +314,6 @@ const LandingPage = () => {
                 </Container>
             </StyledAppBar>
 
-            {/* Hero Section */}
             <Container maxWidth="lg" sx={{ py: 8 }}>
                 <Grid container spacing={4} alignItems="center">
                     <Grid item xs={12} md={6}>
@@ -260,7 +353,6 @@ const LandingPage = () => {
                 </Grid>
             </Container>
 
-            {/* Features Section */}
             <Container maxWidth="lg" sx={{ py: 8 }}>
                 <Typography variant="h5" sx={{ textAlign: 'center', mb: 6, fontWeight: 'bold', color: '#4C1D95' }}>
                     Why Formora?
@@ -306,7 +398,6 @@ const LandingPage = () => {
                 </Grid>
             </Container>
 
-            {/* Analytics Section */}
             <Container maxWidth="lg" sx={{ py: 8 }}>
                 <Grid container spacing={4}>
                     <Grid item xs={12} md={4}>
@@ -470,6 +561,11 @@ const LandingPage = () => {
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
+                  {loginError && (
+                        <Alert severity="error" sx={{ mb: 2 }}>
+                            {loginError}
+                        </Alert>
+                    )}
                     <StyledTextField
                         autoFocus
                         margin="dense"
@@ -478,6 +574,8 @@ const LandingPage = () => {
                         type="email"
                         fullWidth
                         variant="outlined"
+                        value={loginEmail}
+                        onChange={(e) => setLoginEmail(e.target.value)}
                     />
                     <StyledTextField
                         margin="dense"
@@ -486,15 +584,16 @@ const LandingPage = () => {
                         type="password"
                         fullWidth
                         variant="outlined"
+                        value={loginPassword}
+                        onChange={(e) => setLoginPassword(e.target.value)}
                     />
                 </DialogContent>
                 <DialogActions>
                     <StyledButton onClick={handleLoginClose}>Cancel</StyledButton>
-                    <StyledButton onClick={handleLoginClose} variant="contained" color="primary">Login</StyledButton>
+                    <StyledButton onClick={handleLogin} variant="contained" color="primary">Login</StyledButton>
                 </DialogActions>
             </StyledDialog>
 
-            {/* Signup Dialog */}
             <StyledDialog
                 open={signupOpen}
                 TransitionComponent={Transition}
@@ -509,15 +608,73 @@ const LandingPage = () => {
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
+                    {signupError && (
+                        <Alert severity="error" sx={{ mb: 2 }}>
+                            {signupError}
+                        </Alert>
+                    )}
+                    {signupSuccessMessage && (
+                        <Alert severity="success" sx={{ mb: 2 }}>
+                            {signupSuccessMessage}
+                        </Alert>
+                    )}
                     <StyledTextField
                         autoFocus
+                        margin="dense"
+                        id="name"
+                        label="Name"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        value={signupName}
+                        onChange={(e) => setSignupName(e.target.value)}
+                    />
+                    <StyledTextField
+                        margin="dense"
+                        id="username"
+                        label="Username"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        value={signupUsername}
+                        onChange={(e) => setSignupUsername(e.target.value)}
+                    />
+                    <StyledTextField
                         margin="dense"
                         id="email"
                         label="Email Address"
                         type="email"
                         fullWidth
                         variant="outlined"
+                        value={signupEmail}
+                        onChange={(e) => setSignupEmail(e.target.value)}
                     />
+                    <LocalizationProvider dateAdapter={AdapterMoment}>
+                        <DatePicker
+                            label="Date of Birth"
+                            value={signupDob}
+                            onChange={(newValue) => {
+                                setSignupDob(newValue);
+                            }}
+                            renderInput={(params) => <TextField {...params} margin="dense" fullWidth />}
+                        />
+                    </LocalizationProvider>
+
+                    <InputLabel id="gender-label" sx={{ mt: 2 }}>Gender</InputLabel>
+                    <Select
+                        labelId="gender-label"
+                        id="gender"
+                        value={signupGender}
+                        label="Gender"
+                        fullWidth
+                        margin="dense"
+                        onChange={(e) => setSignupGender(e.target.value)}
+                    >
+                        <MenuItem value={'male'}>Male</MenuItem>
+                        <MenuItem value={'female'}>Female</MenuItem>
+                        <MenuItem value={'other'}>Other</MenuItem>
+                    </Select>
+
                     <StyledTextField
                         margin="dense"
                         id="password"
@@ -525,15 +682,26 @@ const LandingPage = () => {
                         type="password"
                         fullWidth
                         variant="outlined"
+                        value={signupPassword}
+                        onChange={(e) => setSignupPassword(e.target.value)}
+                    />
+                    <StyledTextField
+                        margin="dense"
+                        id="confirm-password"
+                        label="Confirm Password"
+                        type="password"
+                        fullWidth
+                        variant="outlined"
+                        value={signupConfirmPassword}
+                        onChange={(e) => setSignupConfirmPassword(e.target.value)}
                     />
                 </DialogContent>
                 <DialogActions>
                     <StyledButton onClick={handleSignupClose}>Cancel</StyledButton>
-                    <StyledButton onClick={handleSignupClose} variant="contained" color="primary">Sign Up</StyledButton>
+                    <StyledButton onClick={handleSignup} variant="contained" color="primary">Sign Up</StyledButton>
                 </DialogActions>
             </StyledDialog>
 
-            {/* Snackbar for successful subscription */}
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={6000}

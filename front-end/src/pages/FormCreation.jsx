@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Settings, Play, Clock, RotateCcw, Percent, Settings2, PlusCircle, Palette, LayoutGrid, Trash2, Edit } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const FormCreation = () => {
+  const navigate = useNavigate();
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [choices, setChoices] = useState([]);
 
@@ -23,9 +25,9 @@ const FormCreation = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pastel-blue to-pastel-purple">
+    <div className="flex flex-col min-h-screen bg-gray-50">
       {/* Top Navigation Bar */}
-      <nav className="flex items-center justify-between px-4 py-3 bg-white shadow-lg border-b rounded-md">
+      <nav className="sticky top-0 z-10 flex items-center justify-between px-4 py-3 bg-white shadow-lg">
         <div className="flex items-center space-x-4">
           <button className="p-2 hover:bg-gray-200 rounded-lg">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -34,14 +36,14 @@ const FormCreation = () => {
           </button>
           <span className="text-sm font-semibold">My workspace</span>
           <span className="text-gray-400">/</span>
-          <span className="text-sm font-semibold">My from creation</span>
+          <span className="text-sm font-semibold">My form creation</span>
         </div>
       </nav>
 
       {/* Main Content */}
-      <div className="flex">
+      <div className="flex flex-1 overflow-hidden">
         {/* Left Sidebar */}
-        <div className="w-64 bg-white border-r h-[calc(100vh-4rem)] shadow-lg p-4 rounded-md">
+        <div className="w-64 bg-white border-r h-full p-4">
           <div className="bg-purple-200 p-3 rounded-lg flex items-center space-x-2 shadow-sm">
             <span className="w-6 h-6 flex items-center justify-center bg-purple-600 text-white rounded-full">1</span>
             <span className="text-sm font-medium">Question</span>
@@ -49,8 +51,8 @@ const FormCreation = () => {
         </div>
 
         {/* Main Form Area */}
-        <div className="flex-1 p-6">
-          <div className="bg-white border rounded-xl p-6 shadow-lg">
+        <div className="flex-1 overflow-y-auto p-6">
+          <div className="bg-white border rounded-xl p-6 shadow-lg mb-4">
             <div className="flex items-center space-x-2 text-gray-400 mb-4">
               <span>1 →</span>
               <input 
@@ -67,7 +69,9 @@ const FormCreation = () => {
             {choices.map((choice, index) => (
               <div key={index} className="flex items-center justify-between text-blue-600 bg-blue-50 p-3 rounded-lg shadow-sm mt-2">
                 <div className="flex items-center space-x-2">
-                  <span className="w-6 h-6 flex items-center justify-center bg-blue-100 rounded-full">A</span>
+                  <span className="w-6 h-6 flex items-center justify-center bg-blue-100 rounded-full">
+                    {String.fromCharCode(65 + index)}
+                  </span>
                   <span>{choice}</span>
                 </div>
                 <div className="flex space-x-2">
@@ -80,14 +84,24 @@ const FormCreation = () => {
                 </div>
               </div>
             ))}
-            <button onClick={addChoice} className="text-blue-600 mt-4 bg-blue-100 px-4 py-2 rounded-lg shadow-md hover:bg-blue-200">
+            <button 
+              onClick={addChoice} 
+              className="text-blue-600 mt-4 bg-blue-100 px-4 py-2 rounded-lg shadow-md hover:bg-blue-200"
+            >
               + Add choice
+            </button>
+          </div>
+          
+          {/* Publish Button */}
+          <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 flex justify-end">
+            <button className="bg-purple-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-purple-700 transition-colors" onClick ={()=> navigate('/dashboard')}>
+              Publish Form
             </button>
           </div>
         </div>
 
         {/* Right Sidebar */}
-        <div className="w-64 bg-white border-l shadow-lg p-4 rounded-md">
+        <div className="w-64 bg-white border-l p-4">
           <h3 className="font-semibold mb-4">Question</h3>
           <div className="flex space-x-2 mb-4">
             <button className="px-4 py-2 bg-gray-100 rounded text-sm font-medium">Text</button>

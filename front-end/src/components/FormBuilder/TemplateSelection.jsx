@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ChevronDown, Grid, List, LogOut, Sparkles, BookOpen, UserPlus, Mail, Menu } from 'lucide-react';
 import TemplatePreview from './TemplatePreview'; // Import the TemplatePreview component
+import form from '../../../public/form.jpg'
 
 const FormTemplateSelector = () => {
     const navigate = useNavigate();
@@ -38,7 +39,7 @@ const FormTemplateSelector = () => {
         id: i,
         title: `Registration Form ${i + 1}`,
         theme: i % 2 === 0 ? 'light' : 'dark',
-        image: `/api/placeholder/300/200?random=${i}`,
+        image: form,
         // Example preview data
         previewImages: [
             `/api/placeholder/600/400?random=${i + 10}`,

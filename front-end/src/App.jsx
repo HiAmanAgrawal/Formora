@@ -10,6 +10,7 @@ import './charts/ChartjsConfig';
 import Dashboard from './pages/Dashboard';
 import Feedback from './pages/Feedback';
 import LandingPage from './pages/LandingPage'; 
+import FormCreation from "./pages/FormCreation";
 
 const ScrollToTop = () => {
   const location = useLocation();
@@ -34,10 +35,11 @@ const App = () => {
             <Route path="/preview" element={<TemplatePreview />} />
             <Route path="/workspace/:id" element={<DataTable />} />
             <Route path="/form-builder" element={<FormBuilder />} />
-            <Route path="/" element={<Dashboard />} />
+            {/* <Route path="/" element={<Dashboard />} /> */}
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/feedback" element={<Feedback />} />
-            <Route path="/landingpage" element={<LandingPage />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/form-creation" element={<FormCreation/>} />
           </Routes>
         </div>
       </div>

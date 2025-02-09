@@ -38,7 +38,7 @@ const FormDashboard = () => {
           <div className="w-8 h-8 bg-violet-900 rounded-lg flex items-center justify-center text-violet-300 font-semibold">
             G
           </div>
-          <span className="font-medium text-gray-800">gouri.agarwal</span>
+          <span className="font-medium text-gray-800">User</span>
         </div>
         <div className="flex items-center gap-4">
           <motion.button

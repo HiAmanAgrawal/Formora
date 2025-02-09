@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const TemplatePreview = ({ template, onClose }) => {
+    const navigate = useNavigate();
     const [currentSlide, setCurrentSlide] = useState(0);
 
     const handleNextSlide = () => {
@@ -96,7 +98,8 @@ const TemplatePreview = ({ template, onClose }) => {
                     </div>
 
                     <motion.button
-                        onClick={() => window.location.href = template.link}
+                        // onClick={() => window.location.href = template.link}
+                        onClick = {() => navigate('/form-creation')}
                         className="px-4 py-2 bg-gradient-to-r from-blue-600 to-violet-700 text-white  hover:bg-gradient-to-br focus:ring-2 focus:ring-blue-300 shadow-md transition-colors duration-200 md:w-auto w-full font-medium"
                         whileHover={{ scale: 1.05, boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)" }}
                         whileTap={{ scale: 0.95 }}
