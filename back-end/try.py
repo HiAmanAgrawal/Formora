@@ -18,7 +18,7 @@ def analyze_feedback(feedback_data):
     formatted_feedback = "\n".join([f"- {q['question']}: {q['answer']}" for q in feedback_data])
 
     prompt = f"""
-Analyze the following customer feedback responses and generate structured insights. Extract trends based on sentiment, urgency, and common themes.
+Analyze the following customer feedback responses and generate structured insights. Extract trends based on sentiment, urgency, and common themes.whenever we have a customer feedback. annalyse the answers and fill the following JSON format.
 Return **only JSON**—no explanations, introductions, or additional text.
 
 JSON format:
